@@ -7,7 +7,7 @@ img_lab = cv.cvtColor(img_orig, cv.COLOR_BGR2LAB)  # Convert to LAB color space
 img_l = img_lab[:, :, 0].copy()  # Extract the L channel
 
 # Apply gamma correction to L channel
-gamma = 0.6
+gamma = 0.7
 t = np.array([(i/255)** gamma * 255 for i in np.arange(256)], dtype='uint8')
 gamma_corrected_l = cv.LUT(img_l, t)    
 
