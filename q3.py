@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 img_orig = cv.imread('a1images/highlights_and_shadows.jpg')
 img_lab = cv.cvtColor(img_orig, cv.COLOR_BGR2LAB)  # Convert to LAB color space
-img_l = img_lab[:, :, 0]  # Extract the L channel
+img_l = img_lab[:, :, 0].copy()  # Extract the L channel
 
 # Apply gamma correction to L channel
 gamma = 0.6
@@ -15,23 +15,23 @@ img_lab[:, :, 0] = gamma_corrected_l  # Replace L channel with corrected values
 img_corrected = cv.cvtColor(img_lab, cv.COLOR_LAB2BGR)  # Convert back to BGR color space
 
 # # Histogram of the original and corrected L channel
-hist_orig, bins_orig = np.histogram(img_orig.ravel(), 256, [0, 256])
-hist_corrected, bins_corrected = np.histogram(img_corrected.ravel(), 256, [0, 256]) 
+hist_orig, bins_orig = np.histogram(img_l.ravel(), 256, [0, 256])
+hist_corrected, bins_corrected = np.histogram(gamma_corrected_l.ravel(), 256, [0, 256]) 
 
 fig, axis = plt.subplots(2, 2, figsize=(12, 8))
 axis[0,0].imshow(cv.cvtColor(img_orig, cv.COLOR_BGR2RGB))
 axis[0,0].set_title('Original Image')
 axis[0,0].axis('off')
 axis[0,1].imshow(cv.cvtColor(img_corrected, cv.COLOR_BGR2RGB))
-axis[0,1].set_title('Corrected Image')
+axis[0,1].set_title(r'Corrected Image ($\gamma = {gamma}$)'.format(gamma=gamma))
 axis[0,1].axis('off')
 
 axis[1,0].plot(hist_orig)
-axis[1,0].set_title('Histogram of Original Image')
+axis[1,0].set_title('Histogram of L Plane- Original')
 axis[1,0].set_xlabel('Intensity Value')
 axis[1,0].set_ylabel('Frequency')
 axis[1,1].plot(hist_corrected)
-axis[1,1].set_title('Histogram of Corrected Image')
+axis[1,1].set_title('Histogram of L Plane- Corrected')
 axis[1,1].set_xlabel('Intensity Value')
 axis[1,1].set_ylabel('Frequency')
 
