@@ -6,11 +6,16 @@ import math
 img_orig = cv.imread('a1images/einstein.png', cv.IMREAD_GRAYSCALE)
 
 
-# --- Using filter2D ---
-sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]) 
-sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
-im_x = cv.filter2D(img_orig, cv.CV_64F, sobel_x)
-im_y = cv.filter2D(img_orig, cv.CV_64F, sobel_y)
+# --- Using seperable filters ---
+
+array1 = np.array([[1, 2, 1]])
+array2 = np.array([[1, 0, -1]])
+
+im_x_intermediate = cv.filter2D(img_orig, cv.CV_64F, array1.reshape(3, 1))
+im_x = cv.filter2D(im_x_intermediate, cv.CV_64F, array2)
+im_y_intermediate = cv.filter2D(img_orig, cv.CV_64F, array2.reshape(3, 1))
+im_y = cv.filter2D(im_y_intermediate, cv.CV_64F, array1)
+
 
 fig, ax = plt.subplots (1, 2, figsize=(12, 6))
 ax[0].imshow(im_x, cmap='gray')

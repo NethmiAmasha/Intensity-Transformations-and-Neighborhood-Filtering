@@ -4,12 +4,16 @@ import matplotlib.pyplot as plt
 
 img_orig = cv.imread('a1images/shells.tif', cv.IMREAD_GRAYSCALE)
 
-M, N = img_orig.shape
-L = 256
-hist_orig, bins_orig = np.histogram(img_orig.ravel(), 256, [0, 256])
-cdf = hist_orig.cumsum()  # Cumulative distribution function
-t = np.array([(L-1) / (M*N) * cdf[i] for i in range(256)]).astype('uint8')  # Transformation function
-img_eq = cv.LUT(img_orig, t)  
+def equalize_histogram(image):
+    M, N = image.shape
+    L = 256
+    hist_orig, bins_orig = np.histogram(image.ravel(), 256, [0, 256])
+    cdf = hist_orig.cumsum()  # Cumulative distribution function
+    t = np.array([(L-1) / (M*N) * cdf[i] for i in range(256)]).astype('uint8')  # Transformation function
+    img_eq = cv.LUT(image, t)  
+    return img_eq, hist_orig
+
+img_eq, hist_orig = equalize_histogram(img_orig)
 hist_eq, bins_eq = np.histogram(img_eq.ravel(), 256, [0, 256])
 
 fig, ax = plt.subplots(2, 2, figsize=(12, 4))
